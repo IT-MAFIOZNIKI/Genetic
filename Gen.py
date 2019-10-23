@@ -1,10 +1,10 @@
 import math
 import random
 def sigmoid(x):
-    t = ((1)/(1 + math.exp(x)))
+    t = ((1)/(1 + math.exp(-x)))
     return t
 def scalar(x,y):
-    s = x[1]*y[1] + x[2]*y[2]
+    s = x[0]*y[0] + x[1]*y[1]
     return s
 class Neuron:
     def __init__(self, weights, bias):
@@ -14,7 +14,7 @@ class Neuron:
     def feedforward(self, inputs):
         # Вводные данные о весе, добавление смещения 
         # и последующее использование функции активации
-        total = scalar(self.weights, intputs) + self.bias
+        total = scalar(self.weights, inputs) + self.bias
         return sigmoid(total)
  
 
