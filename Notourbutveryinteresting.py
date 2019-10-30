@@ -31,6 +31,10 @@ class Neuron:
         self.last_output = sigmoid(out)
         return self.last_output
 
+    def dump(self, indent):
+        print(f'{" "*indent}Neuron({self.weights}, {self.bias})')
+
+
 
 class Layer:
     def __init__(self, n_inputs, n_neurons):
@@ -39,6 +43,11 @@ class Layer:
     def process(self, inputs):
         return [self.neurons[i].process(inputs) for i in range(len(self.neurons))]
 
+    def dump(self, indent):
+        print(f'{" "*indent}Layer(')
+        for neuron in self.neurons:
+            neuron.dump(indent+2)
+        print(f'{" "*indent})')
 
 class Network:
     def __init__(self, training_iteration=500000, learning_rate=0.3, error_threshold=0.0001):
@@ -47,6 +56,13 @@ class Network:
         self.learning_rate = learning_rate
         self.error_threshold = error_threshold
 
+    def dump(self, indent=0):
+        print('Network(')
+        for layer in self.layers:
+            layer.dump(indent+2)
+        print(')')
+    
+    
     def add_layer(self, n_neurons=1, n_inputs=0):
         if n_inputs == 0:
             n_inputs = len(self.layers[-1].neurons)
@@ -116,26 +132,41 @@ class Network:
         return mse
 
 
+def main():
+    network = Network(training_iteration=100000, learning_rate=2.5, error_threshold=0.0001)
+    network.add_layer(2,2)
+    network.add_layer(1)
+    
+    network.dump()
+    
+    
+    network.train([
+        [[0, 0], [0]],
+        [[0, 1], [1]],
+        [[1, 0], [1]],
+        [[1, 1], [0]],
+    ])
+    
+    
+    network.dump()
+    print_output(network)
 
-network = Network(training_iteration=500000, learning_rate=0.3, error_threshold=0.0001)
-network.add_layer(2, 2)
-network.add_layer(1)
 
-network.train([
-    [[0, 0], [0]],
-    [[0, 1], [1]],
-    [[1, 0], [1]],
-    [[1, 1], [0]],
-])
+    
+def print_output(network):
 
-output = network.process([0, 0])
-print('0 XOR 0 = {}'.format(output))
+    output = network.process([0, 0])
+    print('0 XOR 0 = {}'.format(output))
+    
+    output = network.process([0, 1])
+    print('0 XOR 1 = {}'.format(output))
+    
+    output = network.process([1, 0])
+    print('1 XOR 0 = {}'.format(output))
+    
+    output = network.process([1, 1])
+    print('1 XOR 1 = {}'.format(output))
 
-output = network.process([0, 1])
-print('0 XOR 1 = {}'.format(output))
 
-output = network.process([1, 0])
-print('1 XOR 0 = {}'.format(output))
 
-output = network.process([1, 1])
-print('1 XOR 1 = {}'.format(output))
+main()
