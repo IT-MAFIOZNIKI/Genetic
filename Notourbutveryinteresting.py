@@ -91,7 +91,7 @@ class Network:
                 return
 
     def back_propagation(self):
-        for l in range(len(self.layers) - 2, -1, -1):
+        for l in range(len(self.layers) - 2, -2, -1):
             for j in range(0, len(self.layers[l].neurons)):
                 n_back = self.layers[l].neurons[j]
                 n_back.error = 0
@@ -116,9 +116,9 @@ class Network:
         return mse
 
 
-network = Network(training_iteration=500000, learning_rate=0.9, error_threshold=0.000001)
-network.add_layer(5, 2)
-network.add_layer(4)
+
+network = Network(training_iteration=500000, learning_rate=0.3, error_threshold=0.0001)
+network.add_layer(2, 2)
 network.add_layer(1)
 
 network.train([
